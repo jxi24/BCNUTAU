@@ -1,8 +1,8 @@
 #include "models.hh"
 
 // Notes: Conversion of momentum from Rodolfo's notes to code access
-// p_a = mom[0]
-// p_b = mom[1]
+// p_a = -mom[0]
+// p_b = -mom[1]
 // p_1 = mom[2]
 // p_2 = mom[3]
 // p_3 = mom[4]
@@ -39,12 +39,12 @@ double StandardModel::MatrixSquare(const std::vector<chili::FourVector> &mom) {
     double prefactor2 = coeff/s/s/prop_w;
     double prefactor3 = coeff/prop_b/s/prop_w;
 
-    double term1 = prefactor1*64*(mom[4]*mom[1])*
-        ((mom[2]*mom[1])*(mom[3]*mom[0]-mass_b*mass_b*(mom[2]*mom[0])));
-    double term2 = prefactor2*32*s*(mom[2]*mom[3])*(mom[4]*mom[0]);
-    double term3 = prefactor3*64*((mom[2]*mom[3])*(s/2*mom[4]*(mom[2]+mom[1])-(mom[2]*mom[1])*(mom[4]*mom[0])
+    double term1 = -prefactor1*64*(mom[4]*mom[1])*
+        ((mom[2]*mom[0])*(mom[3]*mom[0])-mass_b*mass_b*mom[3]*(mom[2]+mom[0]));
+    double term2 = -prefactor2*32*s*(mom[2]*mom[3])*(mom[4]*mom[0]);
+    double term3 = prefactor3*64*((mom[2]*mom[3])*(s/2*mom[4]*(mom[2]-mom[1])-(mom[2]*mom[1])*(mom[4]*mom[0])
                 - (mom[2]*mom[0])*(mom[4]*mom[1]))
-            + (mom[4]*mom[1])*((mom[2]*mom[1])*(mom[3]*mom[0])-2*(mom[2]*mom[3])*(mom[2]*mom[1])
+            - (mom[4]*mom[1])*((mom[2]*mom[1])*(mom[3]*mom[0])+2*(mom[2]*mom[3])*(mom[2]*mom[1])
                 - (mom[2]*mom[0])*(mom[3]*mom[1])));
 
     return term1+term2+term3;
