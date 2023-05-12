@@ -45,6 +45,12 @@ option(BCNUTAU_ENABLE_TESTING "Enable Test Builds" OFF)
 include(CMake/CPM.cmake)
 add_subdirectory(external)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMake)
+add_library(lhapdf INTERFACE)
+find_package(LHAPDF REQUIRED)
+target_include_directories(lhapdf SYSTEM INTERFACE ${LHAPDF_INCLUDE_DIR})
+target_link_libraries(lhapdf INTERFACE ${LHAPDF_LIBRARY})
+
 # Testing
 if(BCNUTAU_ENABLE_TESTING)
     if(BCNUTAU_COVERAGE)

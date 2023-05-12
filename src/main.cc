@@ -1,4 +1,4 @@
-#include "amplitudes.hh"
+#include "models.hh"
 
 #include "Chili/Model/Model.hh"
 #include "Chili/Channel/Integrand.hh"
@@ -136,8 +136,9 @@ int main() {
 
     // To integrate a function you need to pass it in and tell it to optimize
     // Summary will print out a summary of the results including the values of alpha
+    bcnutau::StandardModel model_sm("CT18NNLO"); ;
     auto func = [&](const std::vector<chili::FourVector> &mom) {
-        return std::norm(amp_d0(mom)+amp_d1(mom)+amp_d2(mom)+amp_d3(mom)+amp_d4(mom));
+        return model_sm.Evaluate(mom);
     };
     integrand.Function() = func;
     integrand.PreProcess() = PreProcess;
