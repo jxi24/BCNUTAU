@@ -10,6 +10,10 @@ inline double LDot(const chili::FourVector &mom1, const chili::FourVector &mom2)
     return mom1*mom2;
 }
 
+inline constexpr int LeviCevita(const int i, const int j, const int k, const int l) {
+    return (i==j||i==k||i==l||j==k||j==l||k==l) ? 0 : -(i-j)*(i-k)*(i-l)*(j-k)*(j-l)*(k-l)/12;
+}
+
 namespace LHAPDF { class PDF; }
 
 namespace bcnutau {
