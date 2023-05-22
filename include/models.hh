@@ -6,6 +6,10 @@
 #include <complex>
 #include <vector>
 
+inline double LDot(const chili::FourVector &mom1, const chili::FourVector &mom2) {
+    return mom1*mom2;
+}
+
 namespace LHAPDF { class PDF; }
 
 namespace bcnutau {
