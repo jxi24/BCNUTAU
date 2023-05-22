@@ -1,6 +1,6 @@
 #include "models.hh"
 
-// Notes: Conversion of momentum from Rodolfo's notes to code access
+// Notes: Conversion of momentum from Rodolfo's notes to Chili convention
 // p_a = -mom[0]
 // p_b = -mom[1]
 // p_1 = mom[2]
@@ -21,18 +21,21 @@ double ModelBase::Evaluate(const std::vector<chili::FourVector> &mom) {
     double x2 = -mom[1].E()/m_ecm;
     if(x1 < 0 || x1 > 1) return 0;
     if(x2 < 0 || x2 > 1) return 0;
-    double xfx1 = m_pdf->xfxQ2(21, x1, scale2); // 21 is the pid for gluon
-    double xfx2 = m_pdf->xfxQ2(4, x2, scale2);  // 4 is the pid for charm
-    return xfx1/x1*xfx2/x2*MatrixSquare(mom);
+    double xfxa1 = m_pdf->xfxQ2(21, x1, scale2); // 21 is the pid for gluon
+    double xfxa2 = m_pdf->xfxQ2(4, x2, scale2);  // 4 is the pid for charm
+    double xfxb1 = m_pdf->xfxQ2(21, x2, scale2); // 21 is the pid for gluon
+    double xfxb2 = m_pdf->xfxQ2(4, x1, scale2);  // 4 is the pid for charm
+    return (xfxa1/x1*xfxa2/x2 + xfxb1/x1*xfxb2/x2)*MatrixSquare(mom);
 }
 
 double StandardModel::MatrixSquare(const std::vector<chili::FourVector> &mom) {
     // TODO: Do we want a dynamic renormalization scale? If so, what should it be
     const double scale2 = 91.18*91.18;
     const double alphas = m_pdf->alphasQ2(scale2);
-    double coeff = 4.0*alphas*alpha*alpha*pow(M_PI, 3)/6.0*vcb2;
-    double prop_b = (mom[2]-mom[0]).Mass2()-mass_b*mass_b;
-    double prop_w = pow((mom[3]+mom[4]).Mass2()-mass_w*mass_w, 2) + pow(width_w*mass_w, 2);
+    constexpr double sinw2 = 0.23;
+    double coeff = 4.0*alphas*alpha/sinw2*alpha/sinw2*pow(M_PI, 3)/6.0*vcb2;
+    double prop_b = Propagator(mom[2]-mom[0], mass_b, 0).real();
+    double prop_w = std::norm(Propagator(mom[3]+mom[4], mass_w, width_w));
     double s = (mom[0]+mom[1]).Mass2();
 
     double prefactor1 = coeff/prop_b/prop_b/prop_w;

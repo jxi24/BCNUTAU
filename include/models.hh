@@ -19,6 +19,10 @@ class ModelBase {
     virtual double MatrixSquare(const std::vector<chili::FourVector> &mom) = 0;
     
   protected:
+    std::complex<double> Propagator(const chili::FourVector &mom, double mass, double width) const {
+        return mom.Mass2() - mass*mass + std::complex<double>(0, 1)*mass*width;
+    }
+
     std::unique_ptr<LHAPDF::PDF> m_pdf;
     double m_ecm;
 };
