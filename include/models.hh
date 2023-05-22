@@ -10,8 +10,28 @@ inline double LDot(const chili::FourVector &mom1, const chili::FourVector &mom2)
     return mom1*mom2;
 }
 
-inline constexpr int LeviCevita(const int i, const int j, const int k, const int l) {
+inline constexpr int LeviCivita(const int i, const int j, const int k, const int l) {
     return (i==j||i==k||i==l||j==k||j==l||k==l) ? 0 : -(i-j)*(i-k)*(i-l)*(j-k)*(j-l)*(k-l)/12;
+}
+
+// LC example: LTensor[LeviCivitaE, {p1}, {p2}, {p3}, {p4}]
+inline double LeviCivitaE(const chili::FourVector &p1, const chili::FourVector &p2,
+                          const chili::FourVector &p3, const chili::FourVector &p4) {
+    double result = 0;
+    for(size_t mu = 0; mu < 4; ++mu) {
+        for(size_t nu = 0; nu < 4; ++nu) {
+            for(size_t alpha = 0; alpha < 4; ++alpha) {
+                for(size_t beta = 0; beta < 4; ++beta) {
+                    int i = static_cast<int>(mu);
+                    int j = static_cast<int>(nu);
+                    int k = static_cast<int>(alpha);
+                    int l = static_cast<int>(beta);
+                    result += LeviCivita(i, j, k, l)*p1[mu]*p2[nu]*p3[alpha]*p4[beta];
+                }
+            }
+        }
+    }
+    return result;
 }
 
 namespace LHAPDF { class PDF; }
