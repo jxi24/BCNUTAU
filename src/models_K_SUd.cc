@@ -200,3 +200,179 @@ double BSM_S1d::MatrixSquare(const std::vector<chili::FourVector> &mom) {
 
     return 2*term13.real()+2*term14.real()+2*term15.real()+2*term23.real()+2*term24.real()+2*term25.real()+term33+2*term34.real()+2*term35.real()+term44+2*term45.real()+term55;
 
+
+
+
+//****************************MODEL TWO ***********************************************************************
+
+double BSM_U1d::MatrixSquare(const std::vector<chili::FourVector> &mom) {
+    
+    auto pa = -mom[0]
+    auto pb = -mom[1]
+    auto p1 = mom[2]
+    auto p2 = mom[3]
+    auto p3 = mom[4]
+    const double scale2 = 91.18*91.18;
+    const double alphas = m_pdf->alphasQ2(scale2);
+    constexpr double sinw2 = 0.23;
+    double prop_bsm_w = sinw2(-mass_w*mass_w+2*(mom[3]*mom[4])+ width_w*mass_w);
+
+    auto coeffu1d = 4.0*alpha*gL33*alphas*std::conj(Vcb)(gL33*std::conj(Vcb) + gL32**std::conj(Vcs));
+
+    auto coeffu1d2 = alphas*(gL33*Vcb + gL32*Vcs)*(gL33*std::conj(Vcb) + gL32*std::conj(Vcs))
+
+    auto term13 = 2*coeffu1d*LDot[p3, pb]*(2*(2*mb^2 + LDot[p1, p3] - LDot[p1, pb])*
+                  (LDot(p2, p3) - LDot(p2, pb)) + LDot(p1, p2)*(mass_b*mass_b + 2*LDot(p3, pb))))/
+                  (3*sinw2*Prop(p2 + p3, mass_w,width_w)*Prop(-p2 + pb, mass_U1, 0)*
+                  pow(Prop(-p2 - p3 + pb, mass_b, width_b),2));
+
+    
+    auto term14 = coeffu1d* (-2*pow(LDot(p1, pb),2)*LDot(p2, p3) - 2*pow(LDot(p1, p3),2*LDot(p2, pb)
+		  - (LDot(p1, p2)*(mass_b*mass_b - 2*LDot(p2, p3)) + 2*(mass_b*mass_b + LDot(p1, p2))*
+                  LDot(p2, pb))*LDot(p3, pb) - LDot(p1, p3)* ((mass_b*mass_b + 2*LDot(p2, p3) - 2*LDot(p2, pb))
+		  *LDot(p2, pb) - 2*LDot(p1, p2)*LDot(p3, pb) + (2*std::complex<double>(0, 1))
+		  *LeviCivitaE(p1,p2,p3,pb)) + LDot(p1, pb)*(LDot(p2, p3)*(mass_b*mass_b + 2*LDot(p1, p3) 
+	          + 2*LDot(p2, p3)) + 2*(LDot(p1, p3) - LDot(p2, p3))*LDot(p2, pb) + 2*LDot(p1, p2)
+		  *LDot(p3, pb) + (2*std::complex<double>(0, 1))*LeviCivitaE(p1,p2,p3,pb) 
+		  - std::complex<double>(0, 1)*(mass_b*mass_b + 2*LDot(p2, p3) - 2*LDot(p2, pb))
+		  *LeviCivitaE(p1,p2,p3,pb))/ (3*sinw2*Prop(p1 + p3, mass_U1, width_U1]*
+                   Prop[p2 + p3, mW, \[CapitalGamma]w]*Prop(p1 + p2 + p3, 0, 0)*Prop(-p2 - p3 + pb, mass_b, 0));
+
+
+    auto term15 = coeffu1d*(-pow((LDot(p1, pb),2)*LDot(p2, p3)) - pow(LDot(p1, p3),2)*LDot(p2, pb)
+	        + LDot(p3, pb)*((2*mass_b*mass_b - LDot(p1, p2))*LDot(p2, p3)+(-4*mass_b*mass_b 
+		+ LDot(p1, p2))*LDot(p2, pb) + LDot(p1, p2)*LDot(p3, pb)) + LDot(p1, p3)*(pow(LDot(p2, pb),2) 
+	        + (LDot(p1, p2) + 2*LDot(p2, p3))*LDot(p3, pb) - LDot(p2, pb)*(mass_b*mass_b + LDot(p2, p3) 
+		+ 3*LDot(p3, pb)) -std::complex<double>(0, 1)*LeviCivitaE(p1,p2,p3,pb) + LDot(p1, pb)
+		*(pow(LDot(p2, p3),2) + LDot(p1, p3)*LDot(p2, pb) + LDot(p2, p3)*(mass_b*mass_b + LDot(p1, p3) 
+		- LDot(p2, pb) - LDot(p3, pb)) + (LDot(p1, p2) + 2*LDot(p2, pb))*LDot(p3, pb) + 
+		std::complex<double>(0, 1)*LeviCivitaE(p1, p2, p3, pb) -std::complex<double>(0, 1) 
+		*(mass_b*mass_b + LDot(p2, p3) - LDot(p2, pb) + LDot(p3, pb))*LeviCivitaE(p1,p2,p3,pb))/
+	        (3*sinw2*Prop(p1 + p3, mass_U1, width_U1)* Prop(p2 + p3, mass_w,width_w)
+		*Prop(-p2 + pb, mass_U1, width_U1]* Prop(-p2 - p3 + pb, mass_b, 0));
+
+
+    auto term23 = coeffu1d*(-2*pow(LDot(p1, pb),2)*LDot(p2, p3) - 2*pow(LDot(p1, p3),2)*LDot(p2, pb) 
+	        - (LDot(p1, p2)*(mass_b*mass_b - 2*LDot(p2, p3)) + 2*(mass_b*mass_b + LDot(p1, p2))*
+		  LDot(p2, pb))*LDot(p3, pb) + LDot(p1, pb)*(LDot(p2, p3)*(mass_b*mass_b + 2*LDot(p1, p3) 
+		+ 2*LDot(p2, p3)) + 2*(LDot(p1, p3) - LDot(p2, p3))*LDot(p2, pb) +2*LDot(p1, p2)
+		* LDot(p3, pb) - (2*std::complex<double>(0, 1))*LeviCivitaE(p1,p2,p3,pb)) + LDot(p1, p3)
+		* (LDot(p2, pb)*(-mass_b*mass_b - 2*LDot(p2, p3) + 2*LDot(p2, pb)) + 2*LDot(p1, p2)
+		* LDot(p3, pb) + (2*std::complex<double>(0, 1))* LeviCivitaE(p1,p2,p3,pb) 
+	        + std::complex<double>(0, 1)*(mass_b*mass_b + 2*LDot(p2, p3) - 2*LDot(p2, pb))
+		* LeviCivitaE(p1,p2,p3,pb))/(3*sinw2*Prop(p2 + p3, mass_w, width_w)*Prop(p1 + p2 + p3, 0, 0)
+		* Prop(-p2 + pb, mass_U1, 0)*Prop(-p2 - p3 + pb, mass_b, 0));
+
+
+   auto term24 = 2*coeffu1d*LDot(p1, p2)*(2*(LDot(p1, p3) + LDot(p2, p3))* (LDot(p1, pb)+LDot(p2, pb)) 
+	       - (mass_b*mass_b + 2*LDot(p1, p2))*LDot(p3, pb)))/(3*sinw2*Prop(p1 + p3, mass_U1,width_U1)
+               * Prop(p2 + p3, mass_w, width_w)*pow(Prop(p1 + p2 + p3, 0, 0),2);
+
+
+
+
+   auto term25 = -coeffu1d* (pow(LDot(p1, pb),2)*LDot(p2, p3) - LDot(p1, pb)*pow(LDot(p2, p3),2) 
+	       + pow(LDot(p1, p3),2)*LDot(p2, pb) + mass_b*mass_b*LDot(p2, p3)*LDot(p2, pb) 
+	       + LDot(p1, pb)*LDot(p2, p3)*LDot(p2, pb) + pow(LDot(p1, p2),2)*LDot(p3, pb) 
+	       + mass_b*mass_b*LDot(p2, pb)*LDot(p3, pb) - LDot(p1, p3)*(-((mass_b*mass_b + LDot(p2, p3))
+	       * LDot(p2, pb)) + pow(LDot(p2, pb),2) + LDot(p1, pb)*(LDot(p2, p3) + LDot(p2, pb)) 
+	       + std::complex<double>(0, 1)*LeviCivitaE(p1,p2,p3,pb)) + LDot(p1, p2)*(-(LDot(p2, p3)
+	       * (LDot(p1, pb) + 2*LDot(p2, pb))) + mass_b*mass_b*LDot(p3, pb) + (-LDot(p1, pb) 
+	       + LDot(p2, p3) + LDot(p2, pb))*LDot(p3, pb) + LDot(p1, p3)*(-2*LDot(p1, pb) 
+	       - 3*LDot(p2, pb) + LDot(p3, pb)) + std::complex<double>(0, 1)*LeviCivitaE(p1,p2,p3,pb) 
+	       +std::complex<double>(0, 1)*(LDot(p1, pb) - LDot(p2, p3) + LDot(p2, pb))
+	       * LeviCivitaE(p1,p2,p3,pb)))/(3*sinw2*Prop(p1 + p3, mass_U1,width_U1)
+               * Prop(p2 + p3, mass_w, mass_w)*Prop(p1 + p2 + p3, 0, 0)*Prop(-p2 + pb, mass_U1, 0));
+  
+
+
+   auto term33 = 4*coeffu1d2 (2*LDot(p2, p3)*(gR33*gR33*(2*mass_b*mass_b + LDot(p1, p2) + LDot(p1, p3))
+	       * LDot(p2, pb) + (gR33*gR33*LDot(p1, p2) + (gL33*gL33 + gR33*gR33)*(2*mass_b*mass_b 
+	       + LDot(p1, p3)))*LDot(p3, pb)) + LDot(p1, pb)*(gR33*gR33*(mass_b*mass_b - 2*LDot(p2, p3))
+               * LDot(p2, p3) + 2*gL33*gL33*(-LDot(p2, p3) + LDot(p2, pb))*LDot(p3, pb)) 
+	       + gL33*gL33*LDot(p3, pb)*(-2*(2*mass_b*mass_b + LDot(p1, p3))*LDot(p2, pb) 
+	       + LDot(p1, p2)*(mass_b*mass_b + 2*LDot(p3, pb)))))/(3*pow(Prop(-p2 + pb, mass_U1, 0),2)
+               * pow(Prop(-p2 - p3 + pb, mass_b, 0),2));
+
+
+
+   auto term34 = 2*coeffu1d2*(-2*gL33*gL33*pow(LDot(p1, pb),2)*LDot(p2, p3) + 2*gL33*gL33*LDot(p1, pb)*
+	         (LDot(p2, p3),2) + LDot(p1, pb)*LDot(p2, p3)*((gL33*gL33 + 2*gR33*gR33)*mass_b*mass_b 
+		 +2*gL33*gL33*(LDot(p1, p3) - LDot(p2, pb))) - 2*gL33*gL33*pow(LDot(p1, p3),2)
+		 * LDot(p2, pb) + 2*gL33*gL33*LDot(p1, p3)*LDot(p1, pb)*LDot(p2, pb)+6*gR33*gR33
+		 * mass_b*mass_b*LDot(p2, p3)*LDot(p2, pb) + 4*gR33*gR33*LDot(p1, p2)*LDot(p2, p3)
+		 * LDot(p2, pb) - LDot(p1, p3)*(gL33*gL33*mass_b*mass_b +2*(gL33*gL33 - 2*gR33*gR33)
+		 *LDot(p2, p3))*LDot(p2, pb) + 2*gL33*gL33*LDot(p1, p3)*pow(LDot(p2, pb),2) - gL33*gL33
+		 *mass_b*mass_b*LDot(p1, p2)*LDot(p3, pb) + 2*gL33*gL33*LDot(p1, p2)*LDot(p1, p3)*LDot(p3, pb) 
+		 + 2*gL33*gL33*LDot(p1, p2)*LDot(p1, pb)*LDot(p3, pb) + 6*gR33*gR33*mass_b*mass_b
+		 * LDot(p2, p3)*LDot(p3, pb) + 2*gL33*gL33*LDot(p1, p2)*LDot(p2, p3)*LDot(p3, pb) 
+		 + 4*gR33*gR33*LDot(p1, p2)*LDot(p2, p3)*LDot(p3, pb) + 4*gR33*gR33*LDot(p1, p3)*LDot(p2, p3)
+		 *LDot(p3, pb) - 2*gL33*gL33*mass_b*mass_b*LDot(p2, pb)*LDot(p3, pb) - 2*gL33*gL33*LDot(p1, p2)
+		 *LDot(p2, pb)*LDot(p3, pb) -std::complex<double>(0, 1)*gL33*gL33*(mass_b*mass_b + 2*LDot(p1, p3)
+		 -2*LDot(p1, pb) + 2*LDot(p2, p3) - 2*LDot(p2, pb))*LeviCivitaE(p1,p2,p3,pb))/
+                 (3*Prop(p1 + p3, mass_U1,width_U1)*Prop(p1 + p2 + p3, 0, 0)*Prop(-p2 + pb, mass_U1, 0)\
+		  *Prop(-p2 - p3 + pb, mass_b, 0));
+
+
+
+     auto term35 = 2*coeffu1d2*  (-(gL33^2*LDot[p1, pb]^2*LDot[p2, p3]) - (gL33^2 + gR33^2)*LDot[p1, p3]^2*
+                   LDot(p2, pb) + 4*gR33*gR33*mass_b*mass_b*LDot(p2, p3)*LDot(p2, pb) +2*gR33*gR33
+		   *LDot(p1, p2)*LDot(p2, p3)*LDot(p2, pb) + gR33*gR33*mass_b*mass_b*LDot(p1, p2)*LDot(p3, pb) 
+		   + gR33*gR33*pow(LDot(p1, p2),2)* LDot(p3, pb) + 2*gL33*gL33*mass_b*mass_b*LDot(p2, p3)
+		   *LDot(p3, pb) +2*gR33*gR33*mass_b*mass_b*LDot(p2, p3)*LDot(p3, pb) - gL33*gL33
+		   *LDot(p1, p2)*LDot(p2, p3)*LDot(p3, pb) + gR33*gR33*LDot(p1, p2)*LDot(p2, p3)*LDot(p3, pb) 
+		   -4*gL33*gL33*mass_b*mass_b*LDot(p2, pb)*LDot(p3, pb) + gL33*gL33*LDot(p1, p2)*LDot(p2, pb)
+		   *LDot(p3, pb) - gR33*gR33*LDot(p1, p2)*LDot(p2, pb)*LDot(p3, pb) +gL33*gL33*LDot(p1, p2)
+		   *pow(LDot(p3, pb),2) - gR33*gR33*LDot(p1, p2)*pow(LDot(p3, pb),2) +LDot(p1, p3)*((gL33*gL33 
+		   + gR33*gR33)*pow(LDot(p2, pb),2) -LDot(p2, pb)*((gL33*gL33 + gR33*gL33)*mass_b*mass_b 
+		   + gR33*gR33*(LDot(p1, p2) - 3*LDot(p2, p3) - LDot(p3, pb)) + gL33*gL33*(LDot(p2, p3) 
+		   + 3*LDot(p3, pb))) + (gL33*gL33 + gR33*gR33)*((LDot(p1, p2) + 2*LDot(p2, p3))*LDot(p3, pb) 
+	           - std::complex<double>(0, 1)*LeviCivitaE(p1, p2,p3,pb))+ LDot(p1, pb)*((gL33 - gR33)*
+		   (gL33 + gR33)*pow(LDot(p2, p3),2) +LDot(p2, p3)*(gL33*gL33*(mass_b*mass_b + LDot(p1, p3) 
+		   - LDot(p2, pb) - LDot(p3, pb)) + gR33*gR33*(-LDot(p1, p2) + LDot(p1, p3) + LDot(p2, pb)
+		   + LDot(p3, pb))) + gL33*gL33*(LDot(p1, p3)*LDot(p2, pb) +(LDot(p1, p2) + 2*LDot(p2, pb))
+	           * LDot(p3, pb) + std::complex<double>(0, 1)*LeviCivitaE(p1,p2,p3,pb))) 
+		   - std::complex<double>(0, 1)*(gR33*gR33*LDot(p1, p2) + (gL33 - gR33)*(gL33 + gR33)
+		   *LDot(p2, p3) + (gL33*gL33 + gR33*gR33)*(mass_b*mass_b - LDot(p2, pb)) + (gL33 - gR33)
+		   *(gL33 + gR33)*LDot(p3, pb))*LeviCivitaE(p1,p2,p3,pb)))/
+	           (3*Prop(p1 + p3, mass_U1, width_U1)*pow(Prop(-p2 + pb, mass_U1, 0),2)
+		   * Prop(-p2 - p3 + pb, mass_b, 0));
+     
+
+
+
+    auto term44 = -4*coeffu1d2*(2*gL33*gL33*pow(LDot(p1, p2),2)*LDot(p3, pb) -LDot(p1, p2)
+		  *(2*gL33*gL33*LDot(p1, p3)*(LDot(p1, pb) + LDot(p2, pb)) +2*LDot(p2, p3)
+		  *(gL33*gL33*LDot(p1, pb) + (gL33*gL33 + gR33*gR33)*LDot(p2, pb)) +(-(gL33*gL33*mass_b*mass_b)
+	          + 2*gR33*gR33*LDot(p2, p3))*LDot(p3, pb)) + gR33*gR33*LDot(p2, p3)*(-(LDot(p1, pb)
+		  *(mass_b*mass_b - 2*LDot(p2, p3))) -2*(mass_b*mass_b + LDot(p1, p3))*(LDot(p2, pb) 
+		  + LDot(p3, pb)))))/(3*pow(mass_b*mass_b + 2*p2*p3 + 2*p1*(p2 + p3)),2)*(pow(mass_b*mass_b 
+                  - mass_U1*mass_U1 + 2*p1*p3),2) +  mass_U1*mass_U1*width_U1*width_U1;
+
+
+
+     auto term55 = coeffu1d2* (-2*gL33*gL33*pow(LDot(p1, pb),2)*LDot(p2, p3) +2*LDot(p2, pb)*(-((mass_b*mass_b 
+		 + LDot(p1, p3))*((gL33*gL33 + gR33*gR33)*LDot(p1, p3) + (gL33*gL33 - 2*gR33*gR33)
+		 *LDot(p2, p3))) + (gL33*gL33 + gR33*gR33)*LDot(p1, p3)*LDot(p2, pb)) 
+		 + 2*gR33*gR33*pow(LDot(p1, p2).2)*LDot(p3, pb) +2*(mass_b*mass_b + LDot(p1, p3))
+		 *((gL33*gL33 + gR33*gR33)*LDot(p2, p3) +(-2*gL33*gL33 + gR33*gR33)*LDot(p2, pb))*LDot(p3, pb) 
+		 +LDot(p1, p2)*(2*LDot(p2, p3)*(-(gR33*gR33*LDot(p1, pb)) +(gL33*gL33 + gR33*gR33)
+		 *LDot(p2, pb)) +(2*gL33*gL33*LDot(p1, pb) - 2*gL33*gL33*LDot(p2, p3) -(gL33 - gR33)
+		 *(gL33 + gR33)*(mass_b*mass_b - 2*LDot(p2, pb)))*LDot(p3, pb) - 2*gR3r
+		 *gR33*pow(LDot(p3, pb),2) + 2*LDot(p1, p3)*((gL33*gL33 + gR33*gR33)*LDot(p1, pb) 
+		 + (2*gL33*gL33 - gR33*gR33)*LDot(p2, pb) +(-gL33*gL33 + gR33*gR33)*LDot(p3, pb))) 
+		 +LDot(p1, pb)*(2*gL33*gL33*pow(LDot(p2, p3),2) + LDot(p2, p3)*((gL33 - gR33)
+		 *(gL33 + gR33)*(mass_b*mass_b + 2*LDot(p1, p3) - 2*LDot(p2, pb)) + 2*gR33*gR33*LDot(p3, pb)) 
+		 + 2*LDot(p2, pb)*((gL33*gL33 - 2*gR33*gR33)*LDot(p1, p3) + (gL33*gL33 + gR33*gR33)
+		 *LDot(p3, pb))))/(3*pow(Prop(p1 + p3, mass_U1,width_U1),2)*pow(Prop(-p2 + pb, mass_U1, 0),2));
+
+
+
+
+    return 2*term13.real()+2*term14.real()+2*term15.real()+2*term23.real()+2*term24.real()+2*term25.real()+term33+2*term34.real()+2*term35.real()+term44+2*term45.real()+term55; 
+
+
+
+
+
+
